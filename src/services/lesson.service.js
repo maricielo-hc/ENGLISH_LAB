@@ -22,3 +22,23 @@ export async function requestLesson(level, skill, topic) {
 
     return data;
 }
+
+// Buscar temas relacionados para Reading
+export async function requestReadingTopics(query) {
+
+    const params = new URLSearchParams({
+        query
+    });
+
+    const response = await fetch(
+        `${API_URL}/lessons/topics?${params}`
+    );
+
+    if (!response.ok) {
+        throw new Error("Could not request reading topics.");
+    }
+
+    const data = await response.json();
+
+    return data;
+}

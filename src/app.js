@@ -1,4 +1,14 @@
 
+import {
+    requestLesson,
+    requestReadingTopics
+} from "./services/lesson.service.js";
+
+import {
+    renderReading,
+    renderReadingTopics
+} from "./modules/reading.js";
+
 import { renderGrammar, renderLesson } from "./modules/grammar.js";
 
 const app = document.getElementById("view");
@@ -47,7 +57,172 @@ const sections = {
 function renderSection() {
 
     const sectionName = window.location.hash.substring(1) || "hoy";
+   
+    document.querySelectorAll("#tabs a").forEach(link => {
+        const isActive =
+            link.getAttribute("href") === `#${sectionName}`;
+        link.classList.toggle("active", isActive);
+    });
 
+    if (sectionName === "lectura") {
+        app.innerHTML = renderReading();
+
+        
+        const searchButton = document.getElementById("search-reading");
+        const topicInput = document.getElementById("reading-topic");
+        
+        const results = document.getElementById("reading-results");
+
+        // Detectar clics en los botones de artículos relacionados
+        results.addEventListener("click", async (event) => {
+
+            const button = event.target.closest(".reading-topic-button");
+
+            // Comprobar si se pulsó un botón de lectura
+            if (!button) return;
+
+            const selectedTopic = button.dataset.topic;
+            const level = document.getElementById("nivel").value;
+
+            button.disabled = true;
+            button.textContent = "Loading...";
+
+            try {
+                // Solicitar el artículo seleccionado
+                const data = await requestLesson(
+                    level,
+                    "reading",
+                    selectedTopic
+                );
+
+                // Crear el artículo
+                const article = document.createElement("article");
+                article.className = "reading-card";
+
+                const title = document.createElement("h3");
+                title.textContent = data.content.title;
+
+                const paragraph = document.createElement("p");
+                paragraph.textContent = data.content.content;
+
+                const source = document.createElement("div");
+                source.className = "reading-source";
+
+                const sourceText = document.createElement("span");
+                sourceText.textContent = `Source: ${data.content.source}`;
+
+                const link = document.createElement("a");
+                link.href = data.content.url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.textContent = "Read original article";
+
+                source.append(sourceText, link);
+                article.append(title, paragraph, source);
+
+                // Reemplazar el artículo principal
+                const previousArticle = results.querySelector(".reading-card");
+
+                if (previousArticle) {
+                    previousArticle.replaceWith(article);
+                } else {
+                    results.prepend(article);
+                }
+            } catch (error) {
+                console.error("Could not load selected article:", error);
+                alert("Could not load this article. Please try again.");
+            } finally {
+                button.disabled = false;
+                button.textContent = "Read in English Lab →";
+            }
+        });
+        async function searchReading() {
+
+            const topic = topicInput.value.trim();
+            const results = document.getElementById("reading-results");
+            const level = document.getElementById("nivel").value;
+
+            // Comprobar si se escribió un tema
+            if (!topic) {
+                results.textContent = "Please enter a topic.";
+                return;
+            }
+            
+            searchButton.disabled = true;
+            searchButton.textContent = "Searching...";
+            results.textContent = "Finding your reading...";
+            
+            try {
+                // Solicitar el artículo al backend
+                const data = await requestLesson(level, "reading", topic);
+
+                // Crear la tarjeta del artículo
+                const article = document.createElement("article");
+                article.className = "reading-card";
+                
+                const title = document.createElement("h3");
+                title.textContent = data.content.title;
+                
+                const paragraph = document.createElement("p");
+                paragraph.textContent = data.content.content;
+
+                const source = document.createElement("div");
+                source.className = "reading-source";
+
+                const sourceText = document.createElement("span");
+                sourceText.textContent = `Source: ${data.content.source}`;
+                
+                const link = document.createElement("a");
+                link.href = data.content.url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+                link.textContent = "Read original article";
+                
+                source.append(sourceText, link);
+                article.append(title, paragraph, source);
+
+                // Mostrar el artículo
+                results.replaceChildren(article);
+            
+                try {
+                    const topicsData = await requestReadingTopics(topic);
+                    const topicsHTML = renderReadingTopics(topicsData.topics);
+                    
+                    results.insertAdjacentHTML("beforeend", topicsHTML);
+                
+                } catch (error) {
+                    console.error("Could not load related readings:", error);
+                    
+                    const message = document.createElement("p");
+                    message.textContent = "Could not load related readings.";
+                    
+                    results.appendChild(message);
+                }
+            
+            } catch (error) {
+                results.textContent = "Could not find reading content.";
+                console.error(error);
+            }
+            
+            finally {
+                searchButton.disabled = false;
+                searchButton.textContent = "Search";
+            }
+        }
+
+
+
+        // Buscar al hacer clic
+        searchButton.addEventListener("click", searchReading);
+
+        // Buscar al presionar Enter
+        topicInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                searchReading();
+            }
+        });
+        return;
+    }
 
     if (sectionName === "gramatica") {
         app.innerHTML = renderGrammar();

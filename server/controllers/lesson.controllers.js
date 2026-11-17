@@ -1,6 +1,6 @@
-
-export function getLesson(req, res) {
-
+import { searchReadingContent, searchReadingTopics } from "../services/sources.provider.js";
+export async function getLesson(req, res) {
+    
     const { level, skill, topic } = req.query;
 
     // Comprobar que llegaron los parámetros
@@ -11,14 +11,55 @@ export function getLesson(req, res) {
         });
     }
 
-    // Responder con los parámetros recibidos
-    res.json({
-        status: "success",
-        message: "Lesson request received!",
-        request: {
+    try {
+        // Obtener contenido de una fuente externa
+        const content = await searchReadingContent(topic);
+        
+        // Responder con el contenido obtenido
+        res.json({
+            status: "success",
             level,
             skill,
-            topic
-        }
-    });
+            content
+        });
+    } catch (error) {
+
+        console.error("Lesson error:", error.message);
+
+        return res.status(500).json({
+            status: "error",
+            message: "Could not retrieve lesson content."
+        })
+    }
+    
+}
+
+// Buscar temas relacionados para Reading
+export async function getReadingTopics(req, res) {
+
+    const { query } = req.query;
+
+    if (!query) {
+        return res.status(400).json({
+            status: "error",
+            message: "A search query is required."
+        });
+    }
+
+    try {
+        const topics = await searchReadingTopics(query);
+
+        return res.json({
+            status: "success",
+            topics
+        });
+
+    } catch (error) {
+        console.error("Reading topics error:", error.message);
+
+        return res.status(500).json({
+            status: "error",
+            message: "Could not retrieve reading topics."
+        });
+    }
 }
