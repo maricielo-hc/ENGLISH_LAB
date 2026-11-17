@@ -2,7 +2,8 @@
 import express from "express";
 import { 
     getLesson, 
-    getReadingTopics
+    getReadingTopics,
+    generateReadingQuestions
 } from "../controllers/lesson.controllers.js";
 
 const router = express.Router();
@@ -11,5 +12,7 @@ const router = express.Router();
 router.get("/", getLesson);
 
 router.get("/topics", getReadingTopics);
+
+router.post("/reading-questions", generateReadingQuestions);
 
 export default router;

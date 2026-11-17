@@ -42,3 +42,33 @@ export async function requestReadingTopics(query) {
 
     return data;
 }
+
+
+ // Generar preguntas de comprensión con Gemini
+export async function requestReadingQuestions(title, content, level) {
+
+    const response = await fetch(
+        `${API_URL}/lessons/reading-questions`,
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                title,
+                content,
+                level
+            })
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Could not generate reading questions.");
+    }
+
+    const data = await response.json();
+
+    return data;
+}

@@ -87,3 +87,64 @@ export function renderReadingTopics(topics) {
         </section>
     `;
 }
+
+
+ // Mostrar las preguntas generadas por Gemini
+export function renderReadingQuestions(questions) {
+
+    return `
+        <section class="reading-quiz">
+
+            <h3>Reading comprehension ✏️</h3>
+
+            <p>
+                Answer the following questions
+                to check your understanding.
+            </p>
+
+            <form id="reading-quiz-form">
+
+                ${questions.map((question, index) => `
+
+                    <article class="reading-question">
+
+                        <h4>
+                            ${index + 1}. ${escapeHTML(question.question)}
+                        </h4>
+
+                        <div class="reading-options">
+
+                            ${question.options.map((option, optionIndex) => `
+                                <label class="reading-option">
+
+                                    <input
+                                        type="radio"
+                                        name="question-${index}"
+                                        value="${optionIndex}"
+                                        required
+                                    >
+
+                                    <span>
+                                        ${escapeHTML(option)}
+                                    </span>
+
+                                </label>
+                            `).join("")}
+
+                        </div>
+
+                    </article>
+
+                `).join("")}
+
+                <button type="submit" id="submit-reading-quiz">
+                    Check answers
+                </button>
+
+            </form>
+
+            <div id="reading-quiz-feedback"></div>
+
+        </section>
+    `;
+}

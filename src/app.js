@@ -1,12 +1,14 @@
 
 import {
     requestLesson,
-    requestReadingTopics
+    requestReadingTopics,
+    requestReadingQuestions
 } from "./services/lesson.service.js";
 
 import {
     renderReading,
-    renderReadingTopics
+    renderReadingTopics,
+    renderReadingQuestions
 } from "./modules/reading.js";
 
 import { renderGrammar, renderLesson } from "./modules/grammar.js";
@@ -73,6 +75,38 @@ function renderSection() {
         
         const results = document.getElementById("reading-results");
 
+        async function loadReadingQuestions(article) {
+            const quizContainer = document.createElement("div");
+            quizContainer.id = "reading-quiz-container";
+            quizContainer.textContent = "Generating questions...";
+            
+            document.getElementById("reading-quiz-container")?.remove();
+            
+            results.appendChild(quizContainer);
+
+            try {
+                const questionsData = await requestReadingQuestions(
+                    article.title,       
+                    article.content,
+        
+                    document.getElementById("nivel").value
+                );
+
+                quizContainer.innerHTML = renderReadingQuestions(              
+                    questionsData.questions
+    
+                );
+
+            } catch (error) {
+    
+                console.error("Reading questions error:", error);
+    
+                quizContainer.textContent =
+                    "Could not generate questions. Please try again.";
+
+            }
+        }
+
         // Detectar clics en los botones de artículos relacionados
         results.addEventListener("click", async (event) => {
 
@@ -128,6 +162,7 @@ function renderSection() {
                 } else {
                     results.prepend(article);
                 }
+                await loadReadingQuestions(data.content);
             } catch (error) {
                 console.error("Could not load selected article:", error);
                 alert("Could not load this article. Please try again.");
@@ -183,7 +218,8 @@ function renderSection() {
 
                 // Mostrar el artículo
                 results.replaceChildren(article);
-            
+                
+                await loadReadingQuestions(data.content);
                 try {
                     const topicsData = await requestReadingTopics(topic);
                     const topicsHTML = renderReadingTopics(topicsData.topics);
