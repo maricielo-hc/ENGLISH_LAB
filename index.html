@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="English Lab - Plataforma de aprendizaje de inglés adaptativo">
+
+    <title>English Lab</title>
+
+    <!-- Tipografías -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos principales -->
+    <link rel="stylesheet" href="./assets/css/styles.css">
+</head>
+
+<body>
+
+    <!-- Encabezado -->
+    <header class="top">
+
+        <div class="top-in">
+
+            <div class="brand">
+                <h1>English Lab</h1>
+                <small>Learn English at your own pace</small>
+            </div>
+
+            <!-- Información del estudiante -->
+            <div class="stats">
+
+                <label for="nivel">
+                    Nivel
+
+                    <select id="nivel">
+                        <option value="A1">A1</option>
+                        <option value="A2" selected>A2</option>
+                        <option value="B1">B1</option>
+                        <option value="B2">B2</option>
+                        <option value="C1">C1</option>
+                        <option value="C2">C2</option>
+                    </select>
+                </label>
+
+                <span class="pill">
+                    Racha <b id="h-streak">0</b> días
+                </span>
+
+                <span class="pill">
+                    XP <b id="h-xp">0</b>
+                </span>
+
+                <span class="pill" id="h-save">
+                    <i class="dot" id="h-dot"></i>
+                    <span id="h-savetxt">Conectando...</span>
+                </span>
+
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <nav class="tabs" id="tabs" aria-label="Secciones">
+
+            <a href="#hoy">Hoy</a>
+            <a href="#gramatica">Grammar</a>
+            <a href="#vocabulario">Vocabulary</a>
+            <a href="#listening">Listening</a>
+            <a href="#lectura">Reading</a>
+            <a href="#writing">Writing</a>
+            <a href="#speaking">Speaking</a>
+            <a href="#examen">Exams</a>
+            <a href="#progreso">Progress</a>
+
+        </nav>
+
+    </header>
+
+    <!-- Contenido dinámico -->
+    <main id="view">
+
+        <!-- JavaScript mostrará aquí las secciones -->
+
+    </main>
+
+    <!-- Aplicación principal -->
+    <script type="module" src="./src/app.js"></script>
+
+</body>
+</html>
