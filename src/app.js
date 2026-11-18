@@ -12,6 +12,13 @@ import {
     evaluateReadingAnswers
 } from "./modules/reading.js";
 
+import {
+    renderVocabulary,
+    renderWordDetails
+} from "./modules/vocabulary.js";
+
+import { searchWord } from "./services/dictionary.service.js";
+
 import { renderGrammar, renderLesson } from "./modules/grammar.js";
 
 const app = document.getElementById("view");
@@ -108,6 +115,8 @@ function renderSection() {
                             formData
                         );
                         
+                        quizForm.querySelector("#submit-reading-quiz").remove();
+
                         const feedback = quizContainer.querySelector("#reading-quiz-feedback");
                         feedback.innerHTML = `
                         
@@ -320,6 +329,51 @@ function renderSection() {
             }
         });
         return;
+    }
+
+
+    if (sectionName === "vocabulario") {
+        
+        app.innerHTML = renderVocabulary();
+
+
+        const searchButton = document.getElementById("search-vocabulary");
+        const wordInput = document.getElementById("vocabulary-word");
+        const results = document.getElementById("vocabulary-results");
+
+        async function searchVocabulary() {
+       
+            const word = wordInput.value.trim();
+        
+            if (!word) {
+
+                results.textContent = "Please enter a word.";           
+                return;
+       
+            }
+       
+            results.textContent = "Searching...";        
+            try {
+       
+                const wordData = await searchWord(word);            
+                results.innerHTML = renderWordDetails(wordData);
+       
+            } catch (error) {            
+                results.textContent = error.message;
+     
+            }   
+        }
+    
+        searchButton.addEventListener("click", searchVocabulary);   
+        wordInput.addEventListener("keydown", (event) => {
+        
+            if (event.key === "Enter") {        
+                searchVocabulary();        
+            }    
+        });
+    
+        return;
+
     }
 
     if (sectionName === "gramatica") {

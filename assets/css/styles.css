@@ -858,3 +858,135 @@ button:disabled {
     color: white;
     transform: translateY(-2px);
 }
+
+
+
+/* =================================
+   READING - QUIZ
+================================= */
+
+.reading-quiz {
+    margin-top: 30px;
+    padding: 25px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.reading-quiz h3 {
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.reading-question {
+    margin-top: 22px;
+    padding: 20px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-small);
+}
+
+.reading-question h4 {
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.reading-options {
+    display: grid;
+    gap: 10px;
+}
+
+.reading-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-small);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.reading-option:hover {
+    background: var(--pink-light);
+    border-color: var(--pink);
+}
+
+.reading-option:has(input:checked) {
+    background: var(--yellow-light);
+    border-color: var(--yellow);
+}
+
+.reading-option input {
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+#submit-reading-quiz {
+    margin-top: 25px;
+}
+
+/* Resultados */
+
+.reading-score {
+    margin-top: 25px;
+    padding: 25px;
+    text-align: center;
+    background: var(--pink-soft);
+    border: 1px solid var(--pink);
+    border-radius: var(--radius);
+}
+
+.reading-score h2 {
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-top: 10px;
+}
+
+.reading-corrections {
+    margin-top: 25px;
+}
+
+.reading-correction {
+    margin-top: 15px;
+    padding: 18px;
+    background: var(--surface-soft);
+    border-left: 4px solid var(--pink);
+    border-radius: var(--radius-small);
+}
+
+.reading-correction h4 {
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+
+/* Botón de evaluación de Reading */
+
+#submit-reading-quiz {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    margin-top: 25px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-small);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+#submit-reading-quiz:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+#submit-reading-quiz:active {
+    transform: translateY(0);
+}

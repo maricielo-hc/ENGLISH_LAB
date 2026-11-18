@@ -25,7 +25,8 @@ export async function getLesson(req, res) {
         });
     } catch (error) {
 
-        console.error("Lesson error:", error.message);
+        console.error("Lesson error:", error);
+        console.error("Connection cause:", error.cause);
 
         return res.status(500).json({
             status: "error",
