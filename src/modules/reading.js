@@ -147,4 +147,37 @@ export function renderReadingQuestions(questions) {
 
         </section>
     `;
+
+} 
+// Evaluar las respuestas del cuestionario
+export function evaluateReadingAnswers(questions, formData) {
+
+    let score = 0;
+
+    const results = questions.map((question, index) => {
+
+        const selectedAnswer = formData.get(`question-${index}`);
+
+        const isCorrect =
+            Number(selectedAnswer) === question.correctAnswer;
+
+        if (isCorrect) {
+            score++;
+        }
+
+        return {
+            question: question.question,
+            selectedAnswer,
+            correctAnswer: question.correctAnswer,
+            isCorrect,
+            explanation: question.explanation
+        };
+    });
+
+    return {
+        score,
+        total: questions.length,
+        percentage: Math.round((score / questions.length) * 100),
+        results
+    };
 }

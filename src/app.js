@@ -8,7 +8,8 @@ import {
 import {
     renderReading,
     renderReadingTopics,
-    renderReadingQuestions
+    renderReadingQuestions,
+    evaluateReadingAnswers
 } from "./modules/reading.js";
 
 import { renderGrammar, renderLesson } from "./modules/grammar.js";
@@ -96,6 +97,67 @@ function renderSection() {
                     questionsData.questions
     
                 );
+
+                const quizForm = quizContainer.querySelector("#reading-quiz-form");
+
+                quizForm.addEventListener("submit", (event) => {
+                    event.preventDefault();
+                        const formData = new FormData(quizForm);
+                        const evaluation = evaluateReadingAnswers(
+                            questionsData.questions,
+                            formData
+                        );
+                        
+                        const feedback = quizContainer.querySelector("#reading-quiz-feedback");
+                        feedback.innerHTML = `
+                        
+                            <div class="reading-score">
+                                <h3>Your result 🎉</h3>
+
+                                <p>
+                                    You got ${evaluation.score}                         
+                                    out of ${evaluation.total} correct answers.
+                                </p>
+
+                                <h2>${evaluation.percentage}%</h2>
+
+                            </div>
+
+                            <div class="reading-corrections">
+                                <h3>Review your answers</h3>
+
+                                ${evaluation.results.map((result, index) => `
+            
+                                    <article class="reading-correction">
+                
+                                        <h4>
+                    
+                                            ${index + 1}. ${result.question}
+                                        
+                                        </h4>
+
+                                        <p>
+                
+                                            ${result.isCorrect ? "✅ Correct!" : "❌ Incorrect"}
+                                        </p>
+
+                                        <p>
+                                            ${result.explanation}
+                                        </p>
+
+                                        ${!result.isCorrect ? `
+                                            <p>
+                                                <strong>Correct answer:</strong>
+                                                ${questionsData.questions[index].options[result.correctAnswer]}
+                                            </p>
+                                        ` : ""}
+                                    </article>
+                                `).join("")}
+                            </div>
+                        `;
+   
+                });
+
 
             } catch (error) {
     
