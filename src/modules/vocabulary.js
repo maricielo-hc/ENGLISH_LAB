@@ -33,47 +33,73 @@ export function renderVocabulary() {
 }
 
 
-// Mostrar la información de una palabra
-export function renderWordDetails(wordData) {
 
-    const meaning = wordData.meanings?.[0];
-    const definition = meaning?.definitions?.[0];
+export function renderWordDetails(wordData) {
 
     const phonetic = wordData.phonetic ||
         wordData.phonetics?.find(item => item.text)?.text ||
         "Not available";
+
+    const audio = wordData.phonetics?.find(
+        item => item.audio && item.audio.trim() !== ""
+    )?.audio;
 
     return `
         <article class="vocabulary-card">
 
             <div class="vocabulary-word-header">
 
-                <h3>${wordData.word}</h3>
+                <div>
+                    <h3>${wordData.word}</h3>
+                    <span>${phonetic}</span>
+                </div>
 
-                <span>${phonetic}</span>
+                ${audio ? `
+                    <button
+                        type="button"
+                        class="play-pronunciation"
+                        data-audio="${audio}"
+                    >
+                        🔊 Listen
+                    </button>
+                ` : ""}
 
             </div>
 
-            <div class="vocabulary-meaning">
+            <div class="vocabulary-meanings">
 
-                <span class="vocabulary-type">
-                    ${meaning?.partOfSpeech || "Meaning"}
-                </span>
+                ${wordData.meanings.map(meaning => `
 
-                <p>
-                    ${definition?.definition || "No definition available."}
-                </p>
+                    <section class="vocabulary-meaning">
 
-                ${definition?.example ? `
-                    <blockquote>
-                        "${definition.example}"
-                    </blockquote>
-                ` : ""}
+                        <h4>${meaning.partOfSpeech}</h4>
+
+                        ${meaning.definitions.slice(0, 3).map((item, index) => `
+
+                            <div class="vocabulary-definition">
+
+                                <p>
+                                    <strong>${index + 1}.</strong>
+                                    ${item.definition}
+                                </p>
+
+                                ${item.example ? `
+                                    <blockquote>
+                                        "${item.example}"
+                                    </blockquote>
+                                ` : ""}
+
+                            </div>
+
+                        `).join("")}
+
+                    </section>
+
+                `).join("")}
 
             </div>
 
         </article>
     `;
 }
-
 

@@ -355,9 +355,22 @@ function renderSection() {
             results.textContent = "Searching...";        
             try {
        
-                const wordData = await searchWord(word);            
+                const wordData = await searchWord(word); 
+                console.log("Pronunciation data:", wordData.phonetics);           
                 results.innerHTML = renderWordDetails(wordData);
-       
+                
+                const audioButton = results.querySelector(".play-pronunciation");
+                if (audioButton) {
+                    audioButton.addEventListener("click", () => {
+                        const audioURL = audioButton.dataset.audio; 
+                        const pronunciation = new Audio(audioURL);
+                        pronunciation.play().catch(error => {
+                            console.error("Audio playback error:", error);
+                        
+                        });
+                    });
+                }
+        
             } catch (error) {            
                 results.textContent = error.message;
      
